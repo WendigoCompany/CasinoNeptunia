@@ -10,6 +10,7 @@ import H9 from "../Assets/Cartas/9H.png"
 import H10 from "../Assets/Cartas/10H.png"
 import H11 from "../Assets/Cartas/11H.png"
 import H12 from "../Assets/Cartas/12H.png"
+import H13 from "../Assets/Cartas/13H.png"
 
 import D1 from "../Assets/Cartas/1D.png"
 import D2 from "../Assets/Cartas/2D.png"
@@ -23,6 +24,7 @@ import D9 from "../Assets/Cartas/9D.png"
 import D10 from "../Assets/Cartas/10D.png"
 import D11 from "../Assets/Cartas/11D.png"
 import D12 from "../Assets/Cartas/12D.png"
+import D13 from "../Assets/Cartas/13D.png"
 
 import P1 from "../Assets/Cartas/1P.png"
 import P2 from "../Assets/Cartas/2P.png"
@@ -36,6 +38,7 @@ import P9 from "../Assets/Cartas/9P.png"
 import P10 from "../Assets/Cartas/10P.png"
 import P11 from "../Assets/Cartas/11P.png"
 import P12 from "../Assets/Cartas/12P.png"
+import P13 from "../Assets/Cartas/13P.png"
 
 import T1 from "../Assets/Cartas/1T.png"
 import T2 from "../Assets/Cartas/2T.png"
@@ -49,6 +52,7 @@ import T9 from "../Assets/Cartas/9T.png"
 import T10 from "../Assets/Cartas/10T.png"
 import T11 from "../Assets/Cartas/11T.png"
 import T12 from "../Assets/Cartas/12T.png"
+import T13 from "../Assets/Cartas/13T.png"
 
 
 
@@ -66,6 +70,7 @@ const Cards_Assets = {
         H10,
         H11,
         H12,
+        H13,
     ],
     "diamante": [
         D1,
@@ -80,6 +85,7 @@ const Cards_Assets = {
         D10,
         D11,
         D12,
+        D13,
     ],
     "pica": [
         P1,
@@ -94,6 +100,7 @@ const Cards_Assets = {
         P10,
         P11,
         P12,
+        P13,
     ],
     "trebol": [
         T1,
@@ -108,6 +115,7 @@ const Cards_Assets = {
         T10,
         T11,
         T12,
+        T13,
     ],
 }
 
