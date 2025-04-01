@@ -1,4 +1,5 @@
 import { countRepeat, SortMayor, SortMenor } from "../../Tools/tools";
+import { PlayMat, Waifu } from "../Assets/Components";
 import Cards_Assets from "../Card_Assets"
 import random from "../random"
 
@@ -21,6 +22,8 @@ export default function Poker() {
     let DECK = []
     let ORIGINAL_DECK = []
     //CARTAS
+
+    let cartsToReturn = []
 
 
     const Scale = [
@@ -58,7 +61,7 @@ export default function Poker() {
                 }
 
                 if (card_repeated) {
-                    return { bool: true, scalevalue: card_repeated, scalename: 'Pair of ' + specialValues(card_repeated), id: 1 };
+                    return { bool: true, scalevalue: card_repeated, scalename: 'Pair of -' + specialValues(card_repeated), id: 1 };
 
                 } else {
                     return { bool: false };
@@ -110,7 +113,7 @@ export default function Poker() {
                 }
 
                 if (card_repeated) {
-                    return { bool: true, scalevalue: card_repeated, scalename: 'Trio of ' + specialValues(card_repeated), id: 3 };
+                    return { bool: true, scalevalue: card_repeated, scalename: 'Trio of -' + specialValues(card_repeated), id: 3 };
 
                 } else {
                     return { bool: false };
@@ -166,7 +169,7 @@ export default function Poker() {
 
                 }
 
-                return { bool: true, scalevalue: Scale[0].vali(HAND).scalevalue, scalename: 'Flush of ' + specialValues(palo), id: 5 };
+                return { bool: true, scalevalue: Scale[0].vali(HAND).scalevalue, scalename: 'Flush of -' + specialValues(palo), id: 5 };
 
             }, id: 5
         },
@@ -195,7 +198,7 @@ export default function Poker() {
                 }
 
                 if (card_repeated) {
-                    return { bool: true, scalevalue: card_repeated, scalename: 'Poker of ' + specialValues(card_repeated), id: 7 };
+                    return { bool: true, scalevalue: card_repeated, scalename: 'Poker of -' + specialValues(card_repeated), id: 7 };
 
                 } else {
                     return { bool: false };
@@ -204,15 +207,15 @@ export default function Poker() {
             }, id: 7
         },
         {
-            name: 'Straight Flush', vali: (HAND) => {                
+            name: 'Straight Flush', vali: (HAND) => {
                 const flush = Scale[5].vali(HAND);
                 const straight = Scale[4].vali(HAND);
-                if(flush.bool && straight.bool){
-            
+                if (flush.bool && straight.bool) {
+
                     return { bool: true, scalevalue: straight.scalevalue, scalename: 'Straight Flush - ' + `${straight.scalename.split("-")[1]}`, id: 8 };
                 }
-                
-                
+
+
                 return { bool: false };
 
             }, id: 8
@@ -223,7 +226,7 @@ export default function Poker() {
                 const flush = Scale[5].vali(HAND);
                 let RV = SortMenor(ReplaceAs(Raw_Values(HAND)));
                 if (flush.bool && RV.indexOf(10) != -1 && RV.indexOf(11) != -1 && RV.indexOf(12) != -1 && RV.indexOf(13) != -1 && RV.indexOf(14) != -1) {
-                    return { bool: true, scalevalue: 14, scalename: 'Royal Flush', id: 9 };
+                    return { bool: true, scalevalue: 14, scalename: 'Royal Flush-', id: 9 };
                 }
                 return { bool: false };
             }, id: 9
@@ -335,16 +338,29 @@ export default function Poker() {
 
 
 
-        HAND = [
-            { val: 11, palo: 'T' },
-            { val: 10, palo: 'T' },
-            { val: 12, palo: 'T' },
-            { val: 1, palo: 'T' },
-            { val: 13, palo: 'T' },
+        // HAND = [
+        //     { val: 3, palo: 'D' },
+        //     { val: 3, palo: 'C' },
+        //     { val: 1, palo: 'T' },
+        //     { val: 1, palo: 'T' },
+        //     { val: 3, palo: 'T' },
 
-        ]
+        // ]
 
-        console.log(Scale[9].vali(HAND));
+        let results = undefined;
+        for (let i = 0; i < Scale.length; i++) {
+            const res = Scale[i].vali(HAND)
+            if (res.bool) {
+                results = res
+            }
+
+        }
+
+        return results
+        // console.log("*********************************");
+        // console.log(HAND);
+        // console.log(results);
+        // console.log("*********************************");
 
         //usar unshift
 
@@ -395,6 +411,13 @@ del juego hasta que se inicie una nueva mano. Sin embargo, algunos grupos o vari
     
     */
 
+    // Se compara el valor del trío en cada Full House. El que tenga el trío de mayor valor gana. Por ejemplo:
+
+    // K-K-K 7-7 vence a Q-Q-Q 8-8, porque el trío de reyes es superior al de reinas.
+
+    // Si ambos jugadores tienen el mismo trío, entonces se compara el valor del par. El jugador con el par más alto gana. Ejemplo:
+
+    // 10-10-10 A-A vence a 10-10-10 K-K, porque el par de ases es superior al par de reyes.
 
 
     // High Card
@@ -452,9 +475,10 @@ del juego hasta que se inicie una nueva mano. Sin embargo, algunos grupos o vari
 
     //START
 
-    
- //SI 2 ROYAL FLUSH, GANA EL JUGADOR
+
+    //SI 2 ROYAL FLUSH, GANA EL JUGADOR
     if (ORIGINAL_DECK.length == 0) {
+
         for (let i = 0; i < 12; i++) {
             ORIGINAL_DECK.push({
                 val: i + 1,
@@ -483,15 +507,168 @@ del juego hasta que se inicie una nueva mano. Sin embargo, algunos grupos o vari
     }
 
     New_Hand()
+
+
     // debug()
 
 
     //START
     return <div>
+        <PlayMat>
 
+            <table className="table-hand pabs">
+                <tr>
+                    <td className="cpu-info-hand txalic">
+                        <table className="table-info">
+                            <tr>
+                                <td>
+                                    <label htmlFor="" className="b-txt-1">MONEY</label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label htmlFor="" className="b-txt-1">${"XXXXXXXXXXXX"}</label>
+                                </td>
+
+                            </tr>
+                            <hr color="black" />
+                            <tr>
+                                <td>
+                                    <label htmlFor="" className="b-txt-1">HAND:</label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label htmlFor="" className="b-txt-1">{USER_VALUE.scalename.split("-")[0]}</label>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label htmlFor="" className="b-txt-1">{USER_VALUE.scalename.split("-")[1]}</label>
+                                </td>
+
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <div id="CPU-HAND" className="pabs w100">
+                            <HAND_Compo HAND={CPU_HAND} id={'CPU'}></HAND_Compo>
+                        </div>
+                    </td>
+                    <td className="txalir">
+                
+                    </td>
+                </tr>
+            </table>
+
+        <div className="bet-container pabs">
+
+        </div>
+
+            <table className="table-hand pabs table-hand-user">
+                <tr>
+                    <td className=" user-info-hand txalic">
+                        <table className="table-info">
+                            <tr>
+                                <td>
+                                    <label htmlFor="" className="b-txt-1">MONEY</label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label htmlFor="" className="b-txt-1">${"XXXXXXXXXXXX"}</label>
+                                </td>
+
+                            </tr>
+                            <hr color="black" />
+                            <tr>
+                                <td>
+                                    <label htmlFor="" className="b-txt-1">HAND:</label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label htmlFor="" className="b-txt-1">{USER_VALUE.scalename.split("-")[0]}</label>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label htmlFor="" className="b-txt-1">{USER_VALUE.scalename.split("-")[1]}</label>
+                                </td>
+
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <div id="USER-HAND">
+                            <HAND_Compo HAND={USER_HAND} id={'USER'}></HAND_Compo>
+                        </div>
+                    </td>
+                    <td className="txalir">
+                               <button onClick={()=>{
+                            alert(1)
+                        }} className="point help-button btn-txt">BACK</button>
+                        <button className="point help-button btn-txt">HELP</button>
+                    </td>
+                </tr>
+            </table>
+
+        </PlayMat>
+        <Waifu></Waifu>
     </div>
 
 
 
+
+}
+
+function HAND_Compo({ HAND, id }) {
+    console.log(HAND);
+    const BUILD_CARDS = () => {
+        const HAND_COMPONENTS = [];
+        for (let i = 0; i < HAND.length; i++) {
+            HAND_COMPONENTS.push(
+                <div id={`card-${id}-${i}`} className="dinlbl card-cont">
+                    <CARD CARD={HAND[i]} id={id} />
+                </div>
+            )
+
+        }
+
+
+        let ci = 0;
+        let int = setInterval(() => {
+            document.getElementById(`card-${id}-${ci}`).style.opacity = 1;
+            ci++
+
+            if (ci == HAND.length) {
+                clearInterval(int)
+            }
+        }, 250);
+        return HAND_COMPONENTS
+    }
+    return <div>
+        {BUILD_CARDS()}
+    </div>
+}
+
+function CARD({ CARD, id }) {
+    return <img className={`${id == 'USER' ? 'point' : ''} w100 h100`} data-active="f" style={{ top: "-20%" }} onClick={(e) => {
+        // e.target.style
+        if(id == 'USER'){
+            if (e.target.getAttribute('data-active') == 'f') {
+                e.target.style.position = "relative";
+                e.target.setAttribute('data-active', 't')
+            } else {
+                e.target.style.position = "static";
+                e.target.setAttribute('data-active', 'f')
+            }
+    
+        }
+
+
+    }} src={CARD.img} alt="" />
 
 }

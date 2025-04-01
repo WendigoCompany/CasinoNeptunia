@@ -1,0 +1,60 @@
+.bim {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.pabs {
+    position: absolute;
+}
+
+.w100 {
+    width: 100%;
+}
+
+.h100 {
+    height: 100%;
+}
+
+.dinl{ 
+    display: inline;
+}
+
+.dinlbl{ 
+    display: inline-block;
+}
+
+.point{
+    cursor: pointer;
+}
+
+.txalil{
+    text-align: left;
+}
+
+.txalir{
+    text-align: right;
+}
+
+.txalic{
+    text-align: center;
+}
+
+/* FONTS */
+.btn-txt{
+    font-family: "Noto Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-style: normal;
+    font-variation-settings:
+      "wdth" 100;
+}
+
+.b-txt-1{
+    font-family: "Noto Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 300;
+    font-style: normal;
+    font-variation-settings:
+      "wdth" 100;
+}

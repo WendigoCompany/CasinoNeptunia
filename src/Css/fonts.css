@@ -1,0 +1,14 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+
+ /* <weight>: Use a value from 100 to 900 */
+ /* <uniquifier>: Use a unique and descriptive class name */
+/* 
+.noto-sans-<uniquifier> {
+  font-family: "Noto Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: <weight>;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 100;
+} */
