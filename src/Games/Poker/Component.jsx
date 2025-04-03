@@ -1,9 +1,11 @@
 import { countRepeat, SortMayor, SortMenor } from "../../Tools/tools";
 import { PlayMat, Waifu } from "../Assets/Components";
 import Cards_Assets from "../Card_Assets"
+import { Back_to_Menu, Help_Menu } from "../Generic_Funcions";
 import random from "../random"
 
 export default function Poker() {
+
 
 
     //MANOS
@@ -21,7 +23,12 @@ export default function Poker() {
     //CARTAS
     let DECK = []
     let ORIGINAL_DECK = []
+    let CHANGED = false
     //CARTAS
+
+    //BET
+    let BET = 0;
+    //BET
 
     let cartsToReturn = []
 
@@ -314,7 +321,7 @@ export default function Poker() {
         }
 
         DECK = shuffled
-        ORIGINAL_DECK = shuffled
+        // ORIGINAL_DECK = shuffled
     }
 
     //FUNCIONES DEL DECK
@@ -399,7 +406,164 @@ export default function Poker() {
         CPU_VALUE = Evaluate_Hand(CPU_HAND)
     }
 
+    const CPU_Thinking = (HAND) => {
 
+        const Flush_Posi = (HAND) => {
+
+            let palos = {
+                "C": [],
+                "T": [],
+                "D": [],
+                "P": [],
+            };
+            for (let i = 0; i < HAND.length; i++) {
+                palos[HAND[i].palo].push(HAND[i]);
+            }
+            let counter = `${Object.keys(palos)[0]}-${palos[Object.keys(palos)[0]].length}`;
+
+            for (let i = 0; i < Object.keys(palos).length; i++) {
+                // counter.push(`${Object.keys(palos)[i]}-${palos[Object.keys(palos)[i]].length}`)
+                if (palos[Object.keys(palos)[i]].length > counter.split('-')[1]) {
+                    counter = `${Object.keys(palos)[i]}-${palos[Object.keys(palos)[i]].length}`
+                }
+            }
+
+            return counter.split('-')
+
+        }
+        const Strai_Posi = (H) => {
+            const posi = [];
+            if (Array.isArray(H)) {
+                posi.push(H[0])
+                for (let i = 1; i <= 5; i++) {
+                    if (H.indexOf(H[0] + i) != -1) {
+                        posi.push(H[H.indexOf(H[0] + i)])
+                    }
+                }
+
+            }
+            return posi
+        }
+        // console.log(CPU_VALUE.id);
+
+        let P1;
+        let P2;
+
+        if (HAND.filter(c => c.val == 1)[0]) {
+            P2 = SortMenor(ReplaceAs(Raw_Values(HAND)));
+        }
+
+        P1 = SortMenor(Raw_Values(HAND))
+
+
+        let StrPosi = [Strai_Posi(P1), Strai_Posi(P2)];
+
+        if (StrPosi[0].length > StrPosi[1].length) {
+            StrPosi = StrPosi[0]
+        } else {
+            StrPosi = StrPosi[1]
+        }
+
+        const FlushPosi = Flush_Posi(HAND);
+        if (FlushPosi[1] >= StrPosi.length) {
+            return 5
+        } else {
+            return 4
+
+        }
+    }
+
+    const CPU_Selecting_Cards = (id) => {
+        switch (id) {
+            case 2:
+            console.log(2);
+            
+            break;
+
+
+            case 3:
+            console.log(3);
+            
+                break;
+
+
+
+            case 4:
+            console.log(4);
+            
+                break;
+
+
+
+            case 5:
+            console.log(5);
+            
+                break;
+
+
+
+            case 6:
+            console.log(6);
+            
+                break;
+
+
+            case 7:
+            console.log(7);
+            
+                break;
+
+            case 8:
+            console.log(8);
+            
+                break;
+            case 9:
+            console.log(9);
+            
+                break;
+
+        }
+
+    }
+
+    const Send_Cards_to_Deck = () => {
+
+
+        // e.target.getAttribute('data-active') 
+        const UserChange = document.querySelectorAll('[data-active="t"]');
+        for (let i = 0; i < UserChange.length; i++) {
+            UserChange[i].style.opacity = 0;
+        }
+        const CPU_HAND = [
+            { val: 1, palo: "T" },
+            { val: 3, palo: "D" },
+            { val: 3, palo: "C" },
+            { val: 2, palo: "D" },
+            { val: 4, palo: "T" },
+
+        ];
+
+        const CPU_VALUE = Evaluate_Hand(CPU_HAND);
+
+        if (CPU_VALUE.id == 0 || CPU_VALUE.id == 1) {
+            CPU_VALUE.id = CPU_Thinking(CPU_HAND)
+        }
+
+
+        CPU_Selecting_Cards(CPU_VALUE.id)
+
+
+    }
+
+    const Show_Hand = () => {
+
+        Reset_Game()
+    }
+
+
+    const Reset_Game = () => {
+
+    }
     /*
     En el póker de 5 cartas (también conocido como Draw Poker), cuando un
      jugador devuelve cartas, esas cartas generalmente vuelven al mazo. 
@@ -506,9 +670,8 @@ del juego hasta que se inicie una nueva mano. Sin embargo, algunos grupos o vari
 
     }
 
+
     New_Hand()
-
-
     // debug()
 
 
@@ -539,13 +702,13 @@ del juego hasta que se inicie una nueva mano. Sin embargo, algunos grupos o vari
                             </tr>
                             <tr>
                                 <td>
-                                    <label htmlFor="" className="b-txt-1">{USER_VALUE.scalename.split("-")[0]}</label>
+                                    <label htmlFor="" className="b-txt-1">??????</label>
                                 </td>
 
                             </tr>
                             <tr>
                                 <td>
-                                    <label htmlFor="" className="b-txt-1">{USER_VALUE.scalename.split("-")[1]}</label>
+                                    <label htmlFor="" className="b-txt-1">??????</label>
                                 </td>
 
                             </tr>
@@ -553,18 +716,65 @@ del juego hasta que se inicie una nueva mano. Sin embargo, algunos grupos o vari
                     </td>
                     <td>
                         <div id="CPU-HAND" className="pabs w100">
-                            <HAND_Compo HAND={CPU_HAND} id={'CPU'}></HAND_Compo>
+
                         </div>
+                        {/* <div id="CPU-HAND" className="pabs w100">
+                            <HAND_Compo HAND={CPU_HAND} id={'CPU'}></HAND_Compo>
+                        </div> */}
                     </td>
                     <td className="txalir">
-                
+
                     </td>
                 </tr>
             </table>
 
-        <div className="bet-container pabs">
+            <div className="bet-container pabs">
+                <table className="bet-panel">
+                    <tr>
+                        <td>
+                            <label htmlFor="" className="btn-txt">BET</label>
+                        </td>
+                        <td>
+                            <div>
+                                <div className="dinlbl btn-bet">
+                                    <button className="point rai-bet btn-txt">+10</button>
+                                </div>
+                                <div className="dinlbl btn-bet">
+                                    <button className="point rai-bet btn-txt">+50</button>
+                                </div>
+                                <div className="dinlbl btn-bet">
+                                    <button className="point rai-bet btn-txt">+100</button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label htmlFor="" id="bets" className="btn-txt">${BET}</label>
+                        </td>
+                        <td>
+                            <div>
+                                <div className="dinlbl btn-bet">
+                                    <button className="point dec-bet btn-txt">-10</button>
+                                </div>
+                                <div className="dinlbl btn-bet">
+                                    <button className="point dec-bet btn-txt">-50</button>
+                                </div>
+                                <div className="dinlbl btn-bet">
+                                    <button className="point dec-bet btn-txt">-100</button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <div style={{ 'padding-left': '1vw', 'padding-top': '1vw' }} className="dinl">
+                    <button id="change-card" onClick={() => { Send_Cards_to_Deck() }} className="point btn-txt">CHANGE CARDS</button>
+                </div>
 
-        </div>
+                <div style={{ 'padding-left': '1vw', 'padding-top': '1vw' }} className="dinl">
+                    <button id="change-card" disabled={true} onClick={() => { Show_Hand() }} className="point btn-txt">SHOW HAND</button>
+                </div>
+            </div>
 
             <table className="table-hand pabs table-hand-user">
                 <tr>
@@ -607,10 +817,12 @@ del juego hasta que se inicie una nueva mano. Sin embargo, algunos grupos o vari
                         </div>
                     </td>
                     <td className="txalir">
-                               <button onClick={()=>{
-                            alert(1)
+                        <button onClick={() => {
+                            Back_to_Menu()
                         }} className="point help-button btn-txt">BACK</button>
-                        <button className="point help-button btn-txt">HELP</button>
+                        <button onClick={() => {
+                            Help_Menu()
+                        }} className="point help-button btn-txt">HELP</button>
                     </td>
                 </tr>
             </table>
@@ -657,7 +869,7 @@ function HAND_Compo({ HAND, id }) {
 function CARD({ CARD, id }) {
     return <img className={`${id == 'USER' ? 'point' : ''} w100 h100`} data-active="f" style={{ top: "-20%" }} onClick={(e) => {
         // e.target.style
-        if(id == 'USER'){
+        if (id == 'USER') {
             if (e.target.getAttribute('data-active') == 'f') {
                 e.target.style.position = "relative";
                 e.target.setAttribute('data-active', 't')
@@ -665,7 +877,7 @@ function CARD({ CARD, id }) {
                 e.target.style.position = "static";
                 e.target.setAttribute('data-active', 'f')
             }
-    
+
         }
 
 

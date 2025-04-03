@@ -18,23 +18,23 @@
 .table-hand {
     width: 100%;
 
-}   
+}
 
-.table-hand-user{
+.table-hand-user {
     bottom: 0%;
 }
 
 .table-hand tr td:nth-child(1) {
-    width: 15%;    
+    width: 15%;
 }
 
 .table-hand tr td:nth-child(2) {
-    width: 77%;   
+    width: 77%;
 
 }
 
 .table-hand tr td:nth-child(3) {
-    width: 8%;    
+    width: 8%;
 }
 
 
@@ -45,10 +45,13 @@
     transition: opacity .3s;
 }
 
+.card-cont img{
+    transition: opacity .3s;
+}
 
 
 
-.help-button{
+.help-button {
     font-size: 1.8rem;
     padding: 10%;
     width: 90%;
@@ -56,7 +59,7 @@
 }
 
 
-.cpu-info-hand , .user-info-hand{
+.cpu-info-hand, .user-info-hand {
     vertical-align: top;
     border: 2px solid black;
     font-size: 1.3rem;
@@ -65,8 +68,61 @@
     height: 15vh;
 }
 
-.bet-container{
+.bet-container {
     width: 100%;
     height: 60vh;
-    bottom: 20vh;
+    bottom: -10vh;
+}
+
+
+.bet-panel label {
+    font-size: 1.5vh;
+    padding-right: 2vw;
+    padding-left: 1vw;
+}
+
+.bet-panel button {
+    border-radius: 50%;
+    width: 4vh;
+    height: 4vh;
+    font-size: 1.5vh;
+    transition: background-color .3s;
+
+}
+
+.btn-bet {
+    padding-right: .5vw;
+    padding-bottom: 1vh;
+}
+
+.rai-bet {
+    border: 2px solid #4c7cff;
+    background-color: #332cc3;
+}
+
+.rai-bet:hover {
+    background-color: #5a51ff;
+}
+
+.dec-bet {
+    border: 2px solid #ff8132;
+    background-color: #894141;
+}
+
+.dec-bet:hover {
+    background-color: #ff7722;
+}
+
+#change-card{
+    font-size: 1.5vh;
+    border: 2px solid #203121;
+    background-color: #80ea82;    
+    padding: .3%;
+    border: none;
+    border-radius: 5%;
+    transition: opacity .3s;
+}
+
+#change-card:disabled{
+    opacity: .3;
 }
