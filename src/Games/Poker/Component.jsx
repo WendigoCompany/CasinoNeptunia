@@ -58,17 +58,28 @@ export default function Poker() {
             name: 'One Pair', vali: (HAND) => {
 
                 let card_repeated = false;
+                let toDiscart = [];
                 let RV = SortMenor(ReplaceAs(Raw_Values(HAND)));
 
                 for (let i = 0; i < RV.length; i++) {
                     if (countRepeat(RV, RV[i]) == 2) {
                         card_repeated = RV[i]
+                    } else {
+                        toDiscart.push(RV[i])
+
                     }
+
+
+
 
                 }
 
+
+
                 if (card_repeated) {
-                    return { bool: true, scalevalue: card_repeated, scalename: 'Pair of -' + specialValues(card_repeated), id: 1 };
+
+
+                    return { bool: true, scalevalue: card_repeated, scalename: 'Pair of -' + specialValues(card_repeated), id: 1, extra: toDiscart };
 
                 } else {
                     return { bool: false };
@@ -80,11 +91,10 @@ export default function Poker() {
         {
             name: 'Two Pair', vali: (HAND) => {
                 let card_repeated = [];
+                let toDiscart = [];
                 let RV = SortMenor(ReplaceAs(Raw_Values(HAND)));
 
                 const noRepeat = () => {
-
-
                     if (card_repeated.length == 4) {
                         return [card_repeated[0], card_repeated[2]]
                     }
@@ -95,12 +105,14 @@ export default function Poker() {
                 for (let i = 0; i < RV.length; i++) {
                     if (countRepeat(RV, RV[i]) == 2) {
                         card_repeated.push(RV[i])
+                    } else {
+                        toDiscart.push(RV[i])
                     }
 
                 }
                 card_repeated = noRepeat(SortMenor(card_repeated))
                 if (card_repeated.length == 2) {
-                    return { bool: true, scalevalue: card_repeated.toString().replace(",", "-"), scalename: 'Double Pair - ' + `${specialValues(card_repeated[0])} and ${specialValues(card_repeated[1])}`, id: 2 };
+                    return { bool: true, scalevalue: card_repeated.toString().replace(",", "-"), scalename: 'Double Pair - ' + `${specialValues(card_repeated[0])} and ${specialValues(card_repeated[1])}`, id: 2, extra: toDiscart };
                 } else {
                     return { bool: false };
                 }
@@ -110,11 +122,14 @@ export default function Poker() {
         {
             name: 'Trio', vali: (HAND) => {
                 let card_repeated = false;
+                let toDiscart = [];
                 let RV = SortMenor(ReplaceAs(Raw_Values(HAND)));
 
                 for (let i = 0; i < RV.length; i++) {
                     if (countRepeat(RV, RV[i]) == 3) {
                         card_repeated = RV[i]
+                    } else {
+                        toDiscart.push(RV[i])
                     }
 
                 }
@@ -195,17 +210,22 @@ export default function Poker() {
         {
             name: 'Poker', vali: (HAND) => {
                 let card_repeated = false;
+                let toDiscart = [];
                 let RV = SortMenor(ReplaceAs(Raw_Values(HAND)));
 
                 for (let i = 0; i < RV.length; i++) {
                     if (countRepeat(RV, RV[i]) == 4) {
                         card_repeated = RV[i]
+                    } else {
+
+                        toDiscart.push(RV[i])
+
                     }
 
                 }
 
                 if (card_repeated) {
-                    return { bool: true, scalevalue: card_repeated, scalename: 'Poker of -' + specialValues(card_repeated), id: 7 };
+                    return { bool: true, scalevalue: card_repeated, scalename: 'Poker of -' + specialValues(card_repeated), id: 7, extra: toDiscart };
 
                 } else {
                     return { bool: false };
@@ -428,21 +448,55 @@ export default function Poker() {
                 }
             }
 
-            return counter.split('-')
+            return [HAND.filter(c => c.palo == counter.split('-')[0]), counter.split('-')]
 
         }
-        const Strai_Posi = (H) => {
-            const posi = [];
-            if (Array.isArray(H)) {
-                posi.push(H[0])
-                for (let i = 1; i <= 5; i++) {
-                    if (H.indexOf(H[0] + i) != -1) {
-                        posi.push(H[H.indexOf(H[0] + i)])
+        const Strai_Posi = (HAND) => {
+
+            const posi = [[], [], [], [], []];
+            if (Array.isArray(HAND)) {
+                const RV = Raw_Values(HAND);
+                for (let i = 0; i < RV.length; i++) {
+
+                    for (let j = 0; j < 5; j++) {
+                        console.log(`${RV[i]}`, RV[i] + j)
+
+
+                        if (RV.indexOf(RV[i] + j) != -1) {
+                            posi[i].push(HAND[RV.indexOf(RV[i] + j)])
+                        }
+
                     }
+
                 }
 
             }
-            return posi
+            let final = [0, []];
+            for (let i = 0; i < posi.length; i++) {
+                if (final[0] < posi[i].length) {
+                    final[0] = posi[i].length;
+                    final[1] = posi[i];
+                }
+
+            }
+
+
+
+
+            return final[1]
+
+            // const posi = [];
+            // if (Array.isArray(HAND)) {
+            //     let H = Raw_Values(HAND);
+            //     posi.push(HAND[0])
+            //     for (let i = 1; i <= 5; i++) {
+            //         if (H.indexOf(H[0] + i) != -1) {
+            //             posi.push(HAND[H.indexOf(H[0] + i)])
+            //         }
+            //     }
+
+            // }
+            // return posi
         }
         // console.log(CPU_VALUE.id);
 
@@ -450,10 +504,10 @@ export default function Poker() {
         let P2;
 
         if (HAND.filter(c => c.val == 1)[0]) {
-            P2 = SortMenor(ReplaceAs(Raw_Values(HAND)));
+            P2 = SortMenor(ReplaceAs((HAND)));
         }
 
-        P1 = SortMenor(Raw_Values(HAND))
+        P1 = SortMenor((HAND))
 
 
         let StrPosi = [Strai_Posi(P1), Strai_Posi(P2)];
@@ -465,64 +519,67 @@ export default function Poker() {
         }
 
         const FlushPosi = Flush_Posi(HAND);
-        if (FlushPosi[1] >= StrPosi.length) {
-            return 5
+
+        if (FlushPosi[0].length >= StrPosi.length) {
+            return [5, FlushPosi[0]]
         } else {
-            return 4
+            return [4, StrPosi]
 
         }
     }
 
-    const CPU_Selecting_Cards = (id) => {
-        switch (id) {
-            case 2:
-            console.log(2);
-            
-            break;
+    const CPU_Selecting_Cards = () => {
 
 
-            case 3:
-            console.log(3);
-            
-                break;
+        // switch (id) {
+        //     case 2:
+        //     console.log(2);
+
+        //     break;
 
 
+        //     case 3:
+        //     console.log(3);
 
-            case 4:
-            console.log(4);
-            
-                break;
+        //         break;
 
 
 
-            case 5:
-            console.log(5);
-            
-                break;
+        //     case 4:
+        //     console.log(4);
+
+        //         break;
 
 
 
-            case 6:
-            console.log(6);
-            
-                break;
+        //     case 5:
+        //     console.log(5);
+
+        //         break;
 
 
-            case 7:
-            console.log(7);
-            
-                break;
 
-            case 8:
-            console.log(8);
-            
-                break;
-            case 9:
-            console.log(9);
-            
-                break;
+        //     case 6:
+        //     console.log(6);
 
-        }
+        //         break;
+
+
+        //     case 7:
+        //     console.log(7);
+
+        //         break;
+
+        //     case 8:
+        //     console.log(8);
+
+        //         break;
+        //     case 9:
+        //     console.log(9);
+
+        //         break;
+
+        // }
 
     }
 
@@ -534,24 +591,59 @@ export default function Poker() {
         for (let i = 0; i < UserChange.length; i++) {
             UserChange[i].style.opacity = 0;
         }
+        // const CPU_HAND = [
+        //     { val: 12, palo: "T" },
+        //     { val: 3, palo: "D" },
+        //     { val: 8, palo: "D" },
+        //     { val: 4, palo: "D" },
+        //     { val: 3, palo: "T" },
+
+        // ];
+
         const CPU_HAND = [
-            { val: 1, palo: "T" },
-            { val: 3, palo: "D" },
-            { val: 3, palo: "C" },
-            { val: 2, palo: "D" },
-            { val: 4, palo: "T" },
+            { val: 8, palo: "T" },
+            { val: 7, palo: "D" },
+            { val: 1, palo: "C" },
+            { val: 6, palo: "D" },
+            { val: 5, palo: "T" },
 
         ];
 
-        const CPU_VALUE = Evaluate_Hand(CPU_HAND);
 
+
+        console.clear()
+        CPU_VALUE = Evaluate_Hand(CPU_HAND);
+        let prob_value = 0;
         if (CPU_VALUE.id == 0 || CPU_VALUE.id == 1) {
-            CPU_VALUE.id = CPU_Thinking(CPU_HAND)
+            prob_value = CPU_Thinking(CPU_HAND)
+            CPU_VALUE = { id: prob_value[0] }
+            let toDiscart = [];
+
+
+            for (let i = 0; i < CPU_HAND.length; i++) {
+                if (prob_value[1].findIndex(pro => pro.val == CPU_HAND[i].val && pro.palo == CPU_HAND[i].palo) == -1) {
+
+                    toDiscart.push(CPU_HAND[i])
+
+                }
+
+            }
+            CPU_VALUE['extra'] = toDiscart;
         }
 
 
-        CPU_Selecting_Cards(CPU_VALUE.id)
 
+
+
+        // CPU_Selecting_Cards()
+
+        //BUSCO Y REMUEVO LAS CARTAS EN LA MANO DEL USUARIO
+        //BUSCO Y REMUEVO LAS CARTAS EN LA MANO DE LA CPU
+        //CAMBIO LAS REMOCIONES CON NUEVAS CARTAS LAS CARTAS EN LA MANO DEL USUARIO        
+        //CAMBIO LAS REMOCIONES CON NUEVAS CARTAS LAS CARTAS EN LA MANO DE LA CPU
+        //ACTUALIZO LA MANO DEL JUGADOR
+        //DESABILITO EL BUTTON DE CHANGE CARDS
+        //HABILITO EL DE SHOW HANDS
 
     }
 
@@ -568,11 +660,11 @@ export default function Poker() {
     En el póker de 5 cartas (también conocido como Draw Poker), cuando un
      jugador devuelve cartas, esas cartas generalmente vuelven al mazo. 
      Es decir, las cartas descartadas se mezclan nuevamente con el resto del mazo antes de que se repartan nuevas cartas a los jugadores.
-
-Esto asegura que las cartas descartadas puedan ser redistribuidas en la misma mano si el 
-número de cartas en el mazo se reduce significativamente. No quedan permanentemente fuera 
-del juego hasta que se inicie una nueva mano. Sin embargo, algunos grupos o variantes pueden tener reglas específicas, ¡así que siempre es bueno confirmarlas antes de jugar!
     
+    Esto asegura que las cartas descartadas puedan ser redistribuidas en la misma mano si el 
+    número de cartas en el mazo se reduce significativamente. No quedan permanentemente fuera 
+    del juego hasta que se inicie una nueva mano. Sin embargo, algunos grupos o variantes pueden tener reglas específicas, ¡así que siempre es bueno confirmarlas antes de jugar!
+     
     */
 
     // Se compara el valor del trío en cada Full House. El que tenga el trío de mayor valor gana. Por ejemplo:
@@ -772,7 +864,7 @@ del juego hasta que se inicie una nueva mano. Sin embargo, algunos grupos o vari
                 </div>
 
                 <div style={{ 'padding-left': '1vw', 'padding-top': '1vw' }} className="dinl">
-                    <button id="change-card" disabled={true} onClick={() => { Show_Hand() }} className="point btn-txt">SHOW HAND</button>
+                    <button id="change-card" disabled={true} onClick={() => { Show_Hand() }} className="point btn-txt">SHOW HANDS</button>
                 </div>
             </div>
 
