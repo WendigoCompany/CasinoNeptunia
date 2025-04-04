@@ -459,9 +459,6 @@ export default function Poker() {
                 for (let i = 0; i < RV.length; i++) {
 
                     for (let j = 0; j < 5; j++) {
-                        console.log(`${RV[i]}`, RV[i] + j)
-
-
                         if (RV.indexOf(RV[i] + j) != -1) {
                             posi[i].push(HAND[RV.indexOf(RV[i] + j)])
                         }
@@ -583,13 +580,18 @@ export default function Poker() {
 
     }
 
+    const CleanDeck =(D)=>{
+        return D.filter(d => d != undefined)
+    }
     const Send_Cards_to_Deck = () => {
 
 
         // e.target.getAttribute('data-active') 
         const UserChange = document.querySelectorAll('[data-active="t"]');
+        const card_index = [[], []]
         for (let i = 0; i < UserChange.length; i++) {
             UserChange[i].style.opacity = 0;
+            card_index[0].push(parseInt(UserChange[i].parentNode.id.replace('card-USER-', '')))
         }
         // const CPU_HAND = [
         //     { val: 12, palo: "T" },
@@ -600,19 +602,19 @@ export default function Poker() {
 
         // ];
 
-        const CPU_HAND = [
-            { val: 8, palo: "T" },
-            { val: 7, palo: "D" },
-            { val: 1, palo: "C" },
-            { val: 6, palo: "D" },
-            { val: 5, palo: "T" },
+        // CPU_HAND = [
+        //     { val: 8, palo: "T" },
+        //     { val: 7, palo: "D" },
+        //     { val: 1, palo: "C" },
+        //     { val: 6, palo: "D" },
+        //     { val: 5, palo: "T" },
 
-        ];
+        // ];
 
 
-
-        console.clear()
-        CPU_VALUE = Evaluate_Hand(CPU_HAND);
+        
+        // CPU_VALUE = Evaluate_Hand(CPU_HAND);
+        console.clear();
         let prob_value = 0;
         if (CPU_VALUE.id == 0 || CPU_VALUE.id == 1) {
             prob_value = CPU_Thinking(CPU_HAND)
@@ -633,12 +635,57 @@ export default function Poker() {
 
 
 
+        if (Array.isArray(CPU_VALUE.extra)) {
+            for (let i = 0; i < CPU_VALUE.extra.length; i++) {
+                card_index[1].push(CPU_HAND.findIndex(cd => cd.val == CPU_VALUE.extra[i].val && cd.palo == CPU_VALUE.extra[i].palo))
 
+            }
 
+        }
+      
+
+        const toReturn =[];
+        for (let i = 0; i < card_index[1].length; i++) {
+            toReturn.push(CPU_HAND[card_index[1][i]])
+            CPU_HAND[card_index[1][i]] = undefined
+        }
+
+        for (let i = 0; i < card_index[0].length; i++) {
+            toReturn.push(USER_HAND[card_index[0][i]])
+            USER_HAND[card_index[0][i]] = undefined
+        }
+
+        DECK = DECK.concat(toReturn)
+        Shuffle_Deck()
+        DECK = CleanDeck(DECK)
+        
+        let toDraw =[card_index[0].length, card_index[1].length];
+
+        let maxDraw = card_index[0].length >= card_index[1].length ? card_index[0].length : card_index[1].length;
+       
+        for (let i = 0; i < maxDraw; i++) {
+            let Draw = DECK[0];
+            if(toDraw[0] > 0){
+                USER_HAND[card_index[0][i]] = Draw
+                toDraw[0] --
+                DECK = DECK.slice(1)
+            }
+
+            if(toDraw[1] > 0){
+                Draw = DECK[0];
+                CPU_HAND[card_index[1][i]] = Draw
+                toDraw[1] --
+                DECK = DECK.slice(1)
+            }
+        }
+
+              
+
+    
         // CPU_Selecting_Cards()
 
-        //BUSCO Y REMUEVO LAS CARTAS EN LA MANO DEL USUARIO
-        //BUSCO Y REMUEVO LAS CARTAS EN LA MANO DE LA CPU
+        // REMUEVO LAS CARTAS EN LA MANO DEL USUARIO
+        // REMUEVO LAS CARTAS EN LA MANO DE LA CPU
         //CAMBIO LAS REMOCIONES CON NUEVAS CARTAS LAS CARTAS EN LA MANO DEL USUARIO        
         //CAMBIO LAS REMOCIONES CON NUEVAS CARTAS LAS CARTAS EN LA MANO DE LA CPU
         //ACTUALIZO LA MANO DEL JUGADOR
