@@ -113,7 +113,7 @@
     background-color: #ff7722;
 }
 
-#change-card{
+.change-card{
     font-size: 1.5vh;
     border: 2px solid #203121;
     background-color: #80ea82;    
@@ -123,6 +123,6 @@
     transition: opacity .3s;
 }
 
-#change-card:disabled{
+.change-card:disabled{
     opacity: .3;
 }

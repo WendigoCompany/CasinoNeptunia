@@ -4,6 +4,8 @@ import Cards_Assets from "../Card_Assets"
 import { Back_to_Menu, Help_Menu } from "../Generic_Funcions";
 import random from "../random"
 
+let CHANGED = false
+let SHOWING = false
 export default function Poker() {
 
 
@@ -23,7 +25,7 @@ export default function Poker() {
     //CARTAS
     let DECK = []
     let ORIGINAL_DECK = []
-    let CHANGED = false
+
     //CARTAS
 
     //BET
@@ -525,67 +527,13 @@ export default function Poker() {
         }
     }
 
-    const CPU_Selecting_Cards = () => {
-
-
-        // switch (id) {
-        //     case 2:
-        //     console.log(2);
-
-        //     break;
-
-
-        //     case 3:
-        //     console.log(3);
-
-        //         break;
-
-
-
-        //     case 4:
-        //     console.log(4);
-
-        //         break;
-
-
-
-        //     case 5:
-        //     console.log(5);
-
-        //         break;
-
-
-
-        //     case 6:
-        //     console.log(6);
-
-        //         break;
-
-
-        //     case 7:
-        //     console.log(7);
-
-        //         break;
-
-        //     case 8:
-        //     console.log(8);
-
-        //         break;
-        //     case 9:
-        //     console.log(9);
-
-        //         break;
-
-        // }
-
-    }
-
+    
     const CleanDeck =(D)=>{
         return D.filter(d => d != undefined)
     }
     const Send_Cards_to_Deck = () => {
 
-
+        CHANGED = true
         // e.target.getAttribute('data-active') 
         const UserChange = document.querySelectorAll('[data-active="t"]');
         const card_index = [[], []]
@@ -593,27 +541,7 @@ export default function Poker() {
             UserChange[i].style.opacity = 0;
             card_index[0].push(parseInt(UserChange[i].parentNode.id.replace('card-USER-', '')))
         }
-        // const CPU_HAND = [
-        //     { val: 12, palo: "T" },
-        //     { val: 3, palo: "D" },
-        //     { val: 8, palo: "D" },
-        //     { val: 4, palo: "D" },
-        //     { val: 3, palo: "T" },
-
-        // ];
-
-        // CPU_HAND = [
-        //     { val: 8, palo: "T" },
-        //     { val: 7, palo: "D" },
-        //     { val: 1, palo: "C" },
-        //     { val: 6, palo: "D" },
-        //     { val: 5, palo: "T" },
-
-        // ];
-
-
-        
-        // CPU_VALUE = Evaluate_Hand(CPU_HAND);
+    
         console.clear();
         let prob_value = 0;
         if (CPU_VALUE.id == 0 || CPU_VALUE.id == 1) {
@@ -663,12 +591,14 @@ export default function Poker() {
 
         let maxDraw = card_index[0].length >= card_index[1].length ? card_index[0].length : card_index[1].length;
        
+        const toShow =[];
         for (let i = 0; i < maxDraw; i++) {
             let Draw = DECK[0];
             if(toDraw[0] > 0){
                 USER_HAND[card_index[0][i]] = Draw
                 toDraw[0] --
                 DECK = DECK.slice(1)
+                toShow.push(Draw)
             }
 
             if(toDraw[1] > 0){
@@ -679,26 +609,43 @@ export default function Poker() {
             }
         }
 
-              
+        if( UserChange.length > 0){
+            for (let i = 0; i < UserChange.length; i++) {
+                UserChange[i].style.position = "static";
+            }
+    
+            let conterinterval = 0; 
+            let interval = setInterval(() => {
+                UserChange[conterinterval].src = toShow[conterinterval].img; 
+                UserChange[conterinterval].style.opacity = 1
+                UserChange[conterinterval].setAttribute('data-active', 'f')
+                conterinterval ++
+                if(UserChange[conterinterval] == undefined){
+                    clearInterval(interval)
+                    USER_VALUE = Evaluate_Hand(USER_HAND)
+                    document.getElementById('user-hand-s0').textContent =  USER_VALUE.scalename.split("-")[0]
+                    document.getElementById('user-hand-s1').textContent =  USER_VALUE.scalename.split("-")[1]
+    
+                }
+            }, 300);
+            
+        }
+     
+
+    }
 
     
-        // CPU_Selecting_Cards()
-
-        // REMUEVO LAS CARTAS EN LA MANO DEL USUARIO
-        // REMUEVO LAS CARTAS EN LA MANO DE LA CPU
-        //CAMBIO LAS REMOCIONES CON NUEVAS CARTAS LAS CARTAS EN LA MANO DEL USUARIO        
-        //CAMBIO LAS REMOCIONES CON NUEVAS CARTAS LAS CARTAS EN LA MANO DE LA CPU
-        //ACTUALIZO LA MANO DEL JUGADOR
-        //DESABILITO EL BUTTON DE CHANGE CARDS
-        //HABILITO EL DE SHOW HANDS
-
-    }
 
     const Show_Hand = () => {
+        SHOWING = true
 
-        Reset_Game()
+        // Reset_Game()
     }
 
+
+    const Update_Bet  =()=>{
+
+    }
 
     const Reset_Game = () => {
 
@@ -907,11 +854,18 @@ export default function Poker() {
                     </tr>
                 </table>
                 <div style={{ 'padding-left': '1vw', 'padding-top': '1vw' }} className="dinl">
-                    <button id="change-card" onClick={() => { Send_Cards_to_Deck() }} className="point btn-txt">CHANGE CARDS</button>
+                    <button id="change-card" onClick={(e) => { 
+                        e.target.disabled = true;
+                        Send_Cards_to_Deck()    
+                        document.getElementById("show-card").disabled = false
+                     }} className="point btn-txt change-card">CHANGE CARDS</button>
                 </div>
 
                 <div style={{ 'padding-left': '1vw', 'padding-top': '1vw' }} className="dinl">
-                    <button id="change-card" disabled={true} onClick={() => { Show_Hand() }} className="point btn-txt">SHOW HANDS</button>
+                    <button id="show-card" disabled={true} onClick={() => { 
+                        
+                        Show_Hand() 
+                        }} className="point btn-txt change-card">SHOW HANDS</button>
                 </div>
             </div>
 
@@ -938,13 +892,13 @@ export default function Poker() {
                             </tr>
                             <tr>
                                 <td>
-                                    <label htmlFor="" className="b-txt-1">{USER_VALUE.scalename.split("-")[0]}</label>
+                                    <label htmlFor="" id="user-hand-s0" className="b-txt-1">{USER_VALUE.scalename.split("-")[0]}</label>
                                 </td>
 
                             </tr>
                             <tr>
                                 <td>
-                                    <label htmlFor="" className="b-txt-1">{USER_VALUE.scalename.split("-")[1]}</label>
+                                    <label htmlFor="" id="user-hand-s1" className="b-txt-1">{USER_VALUE.scalename.split("-")[1]}</label>
                                 </td>
 
                             </tr>
@@ -977,6 +931,8 @@ export default function Poker() {
 
 function HAND_Compo({ HAND, id }) {
     console.log(HAND);
+    //USAR ESTADOS SOLO ACA!!
+    
     const BUILD_CARDS = () => {
         const HAND_COMPONENTS = [];
         for (let i = 0; i < HAND.length; i++) {
@@ -1008,7 +964,7 @@ function HAND_Compo({ HAND, id }) {
 function CARD({ CARD, id }) {
     return <img className={`${id == 'USER' ? 'point' : ''} w100 h100`} data-active="f" style={{ top: "-20%" }} onClick={(e) => {
         // e.target.style
-        if (id == 'USER') {
+        if (id == 'USER' && !CHANGED) {
             if (e.target.getAttribute('data-active') == 'f') {
                 e.target.style.position = "relative";
                 e.target.setAttribute('data-active', 't')
@@ -1023,3 +979,4 @@ function CARD({ CARD, id }) {
     }} src={CARD.img} alt="" />
 
 }
+
